@@ -29,4 +29,3 @@ clean:
 	rm -rf *.dSYM
 	rm -f *~ *.o	
 	rm -f $(PROG)
-	rm -f testing.out

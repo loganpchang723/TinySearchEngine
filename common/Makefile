@@ -4,7 +4,7 @@
 #
 OBJS = pagedir.o word.o index.o
 LIB = common.a
-LLIBS = ../libcs50/libcs50-given.a
+# LLIBS = ../libcs50/libcs50-given.a
 
 # add -DNOSLEEP to disable the automatic sleep after web-page fetches
 #               (students, please do not use -DNOSLEEP!)
@@ -19,8 +19,9 @@ CC = gcc
 $(LIB): $(OBJS)
 	ar cr $(LIB) $(OBJS)
 
-index.o: ../libcs50/hashtable.h ../libcs50/counters.h ../libcs50/file.h index.h
 pagedir.o: ../libcs50/webpage.h ../libcs50/file.h pagedir.h
+word.o: word.h
+index.o: ../libcs50/hashtable.h ../libcs50/counters.h ../libcs50/file.h index.h
 
 
 .PHONY: clean

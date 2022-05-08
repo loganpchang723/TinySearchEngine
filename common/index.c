@@ -20,7 +20,6 @@ counters_t* index_find(index_t* it, const char* key);
 void index_delete(index_t* it);
 index_t* index_load(FILE* fp);
 bool index_save(index_t* it, FILE* fp);
-// void index_set(index_t* it, const char* key, const int docID, const int count);
 static void counterdelete(void* item);
 static void save_item(void* arg, const char* key, void* item);
 static void save_counts(void* arg, const int key, const int count);
@@ -63,6 +62,7 @@ index_insert(index_t* index, const char* key, const int docID)
             // if the counter for the given word is in the hashtable, increment the counter for that word
             if (wordCounter != NULL){
                 if (counters_add(wordCounter, docID) != 0){
+                    printf("index_insert: Added word: \"%s\" to the index from docID %d\n", key, docID);
                     return true;
                 } else {
                     return false;
@@ -182,6 +182,7 @@ index_load(FILE* fp)
                 }
             }
             tracker++;
+            printf("index_load: Added word: \"%s\" to the index with count %d in docID %d\n", keyCopy, count, docID);
         }
         // free dyanmic variables
         free(line);
@@ -200,6 +201,7 @@ index_save(index_t* index, FILE* fp)
         hashtable_t* ht = index->hashtable;
         if (ht != NULL){
             hashtable_iterate(ht, fp, &save_item);
+            printf("index_save: Successfully saved the index to the index file\n");
             return true;
         } else {
             return false;
