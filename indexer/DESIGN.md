@@ -43,28 +43,30 @@ And some helper modules that provide data structures:
 
 The indexer will run as follows:
 
-1. execute from a command line as shown in the User Interface
-2. parse the command line, validate parameters, initialize other modules
-3. build the index in memory by loading data from `pageDirectory` by calling *index_build*
+1. Execute from a command line as shown in the User Interface section
+2. Parse the command line, validate parameters, initialize other modules
+3. Build the index in memory by loading data from `pageDirectory` by calling *index_build*
 
 *index_build* will run as follows:
 
-1. create a new *index* object
-2. starting from 1, loop over all document IDs in `pageDirectory`,
-	3. create a *webpage* object from the file *pageDirectory/documentID*
-	4. if the webpage is created,
-		5. add the webpage and its words to the *index* object by calling *index_page*
-6. save the *index* object to `indexFileName`
-7. delete the *index* object from memory
+1. Create a new *index* object
+2. Starting from 1, loop over all document IDs in `pageDirectory`,
+	3. Create a *webpage* object from the file *pageDirectory/documentID*
+	4. If the webpage is created,
+		5. Add the webpage and its words to the *index* object by calling *index_page*
+6. Save the *index* object to `indexFileName`
+7. Delete the *index* object from memory
 
 *index_page* will run as follows:
-1. while there are words in the *webpage* object,
-	2. ignore words of length less than 3
-	3. normalize the word (convert to all lowercase)
-	4. insert the word into the *index* object by,
-		5. if the word is not already in the *index* object,
-			6. initialize a *counters* object for that word
-		7. increment the *counters* object for that word
+1. While there are words in the *webpage* object,
+	2. Ignore words of length less than 3
+	3. Normalize the word (convert to all lowercase)
+	4. Insert the word into the *index* object by,
+		5. If the word is not already in the *index* object,
+			6. Initialize a *counters* object for that word
+		7. Else, return false
+		8. Increment the *counters* object for that word
+9. All words have been processed and stored in the index, so return true
 
 
 ### Dataflow through modules
