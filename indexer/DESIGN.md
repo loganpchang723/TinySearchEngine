@@ -1,4 +1,6 @@
-# TSE Indexer Design Spec
+# CS50 TSE
+
+## TSE Indexer Design Spec
 
 Recall the [Indexer Requirements Spec](REQUIREMENTS.md); the TSE **indexer** is a stand-alone program that reads the document files produced by the TSE crawler, builds an index, and writes that index to a file. Its companion, the **index tester**, loads an index file produced by the indexer and saves it to another file. In this document, only the **indexer** is discussed.
 
