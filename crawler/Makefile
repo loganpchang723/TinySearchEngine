@@ -13,7 +13,7 @@ CC = gcc
 crawler: $(OBJS) $(LLIBS)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -o $@
 
-crawler.o: ../libcs50/bag.h ../libcs50/hashtable.h ../libcs50/webpage.h  ../common/pagedir.h
+crawler.o: ../libcs50/bag.h ../libcs50/hashtable.h ../libcs50/webpage.h  ../common/pagedir.h crawler.h
 
 .PHONY: test valgrind clean
 
