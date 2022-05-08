@@ -63,7 +63,7 @@ index_build (char* pageDir, FILE* fp)
     // read each page in pageDir
     while ( (page = pagedir_get(pageDir, docID)) != NULL){
         // try to index each page in the directory
-            // printf("retrieved html is: %s\n", webpage_getHTML(page));
+        printf("On docID %d, beginning to index page with URL: %s\n", docID, webpage_getURL(page));
         if (index_page(index, page, docID) == false){
             fprintf(stderr, "index_page failed for docID %d in directory %s\n", docID, pageDir);
         }

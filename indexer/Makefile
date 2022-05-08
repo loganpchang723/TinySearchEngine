@@ -22,13 +22,18 @@ indexer: $(OBJS) $(LLIBS)
 
 indextest: $(OBJS1) $(LLIBS)
 	$(CC) $(CFLAGS) $(OBJS1) $(LLIBS) -o indextest
+
 indexer.o: ../libcs50/counters.h ../libcs50/webpage.h  ../common/pagedir.h ../common/word.h ../common/index.h 
 indextest.o: ../libcs50/file.h
 
-.PHONY: test clean
+.PHONY: test valgrind clean
 
 test: testing.sh
 	bash -v testing.sh >& testing.out
+
+valgrind: indexer indextest
+	valgrind --leak-check=full --show-leak-kinds=all ./indexer ../data/letters-3 ../data/letters-3-index
+	valgrind --leak-check=full --show-leak-kinds=all ./indextest ../data/letters-3-index ../data/letters-3-index-testing
 
 clean:
 	rm -rf *.dSYM 
