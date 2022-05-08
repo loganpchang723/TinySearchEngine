@@ -17,7 +17,7 @@ CC = gcc
 
 # build the library by archiving object files
 $(LIB): $(OBJS)
-	ar cr $(LIB) $(LLIBS) $(OBJS)
+	ar cr $(LIB) $(OBJS)
 
 index.o: ../libcs50/hashtable.h ../libcs50/counters.h ../libcs50/file.h index.h
 pagedir.o: ../libcs50/webpage.h ../libcs50/file.h pagedir.h
