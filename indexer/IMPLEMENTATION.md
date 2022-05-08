@@ -1,4 +1,4 @@
-# CS50 TSEx
+# CS50 TSE
 
 ## Indexer Implementation
 
