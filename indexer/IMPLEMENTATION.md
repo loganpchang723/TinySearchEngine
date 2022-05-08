@@ -50,7 +50,7 @@ Arguments: `index` (a pointer to an *index* struct), `page` (a pointer to a *web
 The key data structure is the *index*, which maps each unqiue word longer than 3 characters in `pageDirectory` to (*docID*, *#occurrences*) pairs. The *index* is a *hashtable*, keyed by word and storing *counters* structs as items. The *counters* struct is keyed by *docID* and stores a count of the number of occurrences of that word in the document named "*pageDirectory/docID*".
 
 ### Other Modules
-The indexer leverages other modules in the `common` and `libcs50` directories. In particular, the indexer utilizes the `pageDir`, `index`, and `word` mdouels in the `common` directory. The `index` module is built off of the `hashtable`, `set`, and `counters` modules in `libcs50`. The documentation of each of these modules can be found in their respective header files. 
+The indexer leverages other modules in the `common` and `libcs50` directories. In particular, the indexer utilizes the `pageDir`, `index`, and `word` mdouels in the `common` directory. The `index` module is built off of the `hashtable`, `set`, and `counters` modules in `libcs50`. The documentation of each of these modules can be found in their respective header files.
 
 ### Testing plan
 

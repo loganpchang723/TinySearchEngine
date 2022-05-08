@@ -71,9 +71,9 @@ The indexer will run as follows:
 
 ### Dataflow through modules
 
- 1. *main* parses parameters and passes them to *index_build*.
- 2. *index_build* creates a new *index* object for all of the files in `pageDirectory` to be saved to the provided `indexFileName`.
- 3. *index_page* takes the *index* object, reads through each word in the HTML of the *webpage* object from `pageDirectory` of form "*pageDirectory/docID*", and adds each words frequency to the *index* object.
+ 1. *main* parses parameters and passes them to *index_build*
+ 2. *index_build* creates a new *index* object for all of the files in `pageDirectory` to be saved to the provided `indexFileName`
+ 3. *index_page* takes the *index* object, reads through each word in the HTML of the *webpage* object from `pageDirectory` of form "*pageDirectory/docID*", and adds each words frequency to the *index* object
 
 
 ### Major data structures
