@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#####################################
+## Integration testing for crawler ##
+#####################################
+
 mkdir ../data
 mkdir ../data/letters
 

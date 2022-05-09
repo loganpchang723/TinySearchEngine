@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#####################################
+## Integration testing for indexer ##
+#####################################
+
 # we assume the data from the crawler is already written to the "../data" directory
 
 

@@ -69,6 +69,6 @@ The *indexer* will be tested by building an index from a pageDirectory created b
 
 0. Test the indexer with a `indexFileName` that is read-only.
 
-1. Test the indexer on several different directories created by the crawler. Use *indextest* to validate the *index* object can be loaded, read, and written. Compare the original index file and the index file created by *indextest* to ensure the *index* objects written to both files have identical contents.
+1. Test the indexer on several different directories created by the crawler. Use *indextest* to validate the *index* object can be loaded, read, and written. Compare the original index file with the index file in `/thayerfs/courses/22spring/cosc050/cs50tse/tse-output/` to check its correctness and with the index file created by *indextest* to ensure the *index* objects written to both files have identical contents.
 
 2. Run *valgrind* on both the *indexer* and *indextest* to ensure both programs have no memory leaks or errors.

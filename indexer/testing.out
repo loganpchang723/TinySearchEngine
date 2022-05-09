@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#####################################
+## Integration testing for indexer ##
+#####################################
+
 # we assume the data from the crawler is already written to the "../data" directory
 
 
@@ -31,9 +35,7 @@ ERROR: index file cannot be opened
 
 #testing with a read-only output file
 ./indexer ../data/letters-0 ../data/noncrawlerdir/readonly
-On docID 1, beginning to index page with URL: http://cs50tse.cs.dartmouth.edu/tse/letters/index.html
-index_insert: Added word: "home" to the index from docID 1
-index_save: Successfully saved the index to the index file
+ERROR: index file cannot be opened
 
 
 #testing index test with incorrect number of arguments
@@ -240,8 +242,8 @@ index_save: Successfully saved the index to the index file
 index_save: Successfully saved the index to the index file
 
 diff <(sort ../data/toscrape-0-index) <(sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-0)
-sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-0
 sort ../data/toscrape-0-index
+sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-0
 
 diff <(sort ../data/toscrape-0-index) <(sort ../data/toscrape-0-index-testing)
 sort ../data/toscrape-0-index
@@ -13615,8 +13617,8 @@ sort ../data/toscrape-1-index
 sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-1
 
 diff <(sort ../data/toscrape-1-index) <(sort ../data/toscrape-1-index-testing)
-sort ../data/toscrape-1-index-testing
 sort ../data/toscrape-1-index
+sort ../data/toscrape-1-index-testing
 
 
 #testing with wikipedia depth 0,1
@@ -50520,8 +50522,8 @@ index_save: Successfully saved the index to the index file
 index_save: Successfully saved the index to the index file
 
 diff <(sort ../data/wikipedia-1-index) <(sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/wikipedia-index-1)
-sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/wikipedia-index-1
 sort ../data/wikipedia-1-index
+sort /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/wikipedia-index-1
 
 diff <(sort ../data/wikipedia-1-index) <(sort ../data/wikipedia-1-index-testing)
 sort ../data/wikipedia-1-index
@@ -50529,11 +50531,11 @@ sort ../data/wikipedia-1-index-testing
 
 #testing indexer with valgrind on letters/index.html depth 5
 valgrind --leak-check=full --show-leak-kinds=all ./indexer ../data/letters-5 ../data/letters-5-index
-==9158== Memcheck, a memory error detector
-==9158== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==9158== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==9158== Command: ./indexer ../data/letters-5 ../data/letters-5-index
-==9158== 
+==18165== Memcheck, a memory error detector
+==18165== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==18165== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==18165== Command: ./indexer ../data/letters-5 ../data/letters-5-index
+==18165== 
 On docID 1, beginning to index page with URL: http://cs50tse.cs.dartmouth.edu/tse/letters/index.html
 index_insert: Added word: "home" to the index from docID 1
 On docID 2, beginning to index page with URL: http://cs50tse.cs.dartmouth.edu/tse/letters/A.html
@@ -50563,30 +50565,30 @@ On docID 9, beginning to index page with URL: http://cs50tse.cs.dartmouth.edu/ts
 index_insert: Added word: "for" to the index from docID 9
 index_insert: Added word: "home" to the index from docID 9
 index_save: Successfully saved the index to the index file
-==9158== 
-==9158== HEAP SUMMARY:
-==9158==     in use at exit: 0 bytes in 0 blocks
-==9158==   total heap usage: 1,585 allocs, 1,585 frees, 211,551 bytes allocated
-==9158== 
-==9158== All heap blocks were freed -- no leaks are possible
-==9158== 
-==9158== For counts of detected and suppressed errors, rerun with: -v
-==9158== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==18165== 
+==18165== HEAP SUMMARY:
+==18165==     in use at exit: 0 bytes in 0 blocks
+==18165==   total heap usage: 1,585 allocs, 1,585 frees, 211,551 bytes allocated
+==18165== 
+==18165== All heap blocks were freed -- no leaks are possible
+==18165== 
+==18165== For counts of detected and suppressed errors, rerun with: -v
+==18165== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 #testing indextest with valgrind on letters/index.html depth 5
 valgrind --leak-check=full --show-leak-kinds=all ./indextest ../data/letters-5-index ../data/letters-5-index-testing
-==9170== Memcheck, a memory error detector
-==9170== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==9170== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==9170== Command: ./indextest ../data/letters-5-index ../data/letters-5-index-testing
-==9170== 
+==18166== Memcheck, a memory error detector
+==18166== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==18166== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==18166== Command: ./indextest ../data/letters-5-index ../data/letters-5-index-testing
+==18166== 
 index_save: Successfully saved the index to the index file
-==9170== 
-==9170== HEAP SUMMARY:
-==9170==     in use at exit: 0 bytes in 0 blocks
-==9170==   total heap usage: 659 allocs, 659 frees, 37,225 bytes allocated
-==9170== 
-==9170== All heap blocks were freed -- no leaks are possible
-==9170== 
-==9170== For counts of detected and suppressed errors, rerun with: -v
-==9170== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==18166== 
+==18166== HEAP SUMMARY:
+==18166==     in use at exit: 0 bytes in 0 blocks
+==18166==   total heap usage: 659 allocs, 659 frees, 37,225 bytes allocated
+==18166== 
+==18166== All heap blocks were freed -- no leaks are possible
+==18166== 
+==18166== For counts of detected and suppressed errors, rerun with: -v
+==18166== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

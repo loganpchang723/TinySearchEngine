@@ -1,3 +1,12 @@
+/* 
+ * word.c - CS50 'word' for TSE
+ *
+ * see word.h for more information.
+ *
+ * Logan Chang, 5/9/22
+ * CS50, Spring 2022
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
