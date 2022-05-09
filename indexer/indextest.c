@@ -30,6 +30,7 @@ main(const int argc , const char* argv[])
     FILE* oldFile = fopen(oldIndexFilename, "r");
     FILE* newFile = fopen(newIndexFilename, "w");
 
+    // print error and return non-zero if files cannot be opened
     if (oldFile == NULL){
         fprintf(stderr, "Cannot open first file.\n");
         return 1;
