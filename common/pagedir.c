@@ -55,7 +55,6 @@ pagedir_save (const webpage_t* page, const char* pageDirectory, const int docID)
     sprintf(fname, "%s/%d", pageDirectory, docID);
     if (fname != NULL){
         FILE* fp = fopen(fname,"w");
-        // free(fname);
         if (fp != NULL && page != NULL){
             // get relevant content and print to file      
             fprintf(fp, "%s\n%d\n%s\n", webpage_getURL(page), 

@@ -80,8 +80,6 @@ index_build (char* pageDir, FILE* fp)
     }
     // save index and cleanup
     index_save(index, fp);
-    // printf("index saved\n");
-    // webpage_delete(page);
     index_delete(index);
 }
 
@@ -106,7 +104,6 @@ index_page (index_t* index, webpage_t* page, const int docID)
         // read each word from page
         while ( (currWord = webpage_getNextWord(page, &pos)) != NULL){
             // ignore words less than 3 characters
-                // printf("%s\n", currWord);
             if (strlen(currWord) < 3){
                 free(currWord);
             } else {
