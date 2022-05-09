@@ -221,7 +221,7 @@ save_item(void* arg, const char* key, void* item)
         FILE* fp = arg;
         counters_t* counter = item;
         // print key to the file
-        fprintf(fp, "%s ", key);
+        fprintf(fp, "%s", key);
         counters_iterate(counter, arg, &save_counts);
         fprintf(fp, "\n");
     }
@@ -237,7 +237,7 @@ save_counts(void* arg, const int key, const int count)
     if (arg != NULL){
         // print the count and docID to the file
         FILE* fp =  arg;
-        fprintf(fp, "%d %d ", key, count);
+        fprintf(fp, " %d %d", key, count);
     }
 }
 
