@@ -182,7 +182,6 @@ index_load(FILE* fp)
                 }
             }
             tracker++;
-            printf("index_load: Added word: \"%s\" to the index with count %d in docID %d\n", keyCopy, count, docID);
         }
         // free dyanmic variables
         free(line);

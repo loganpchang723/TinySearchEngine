@@ -24,10 +24,10 @@ main(const int argc , const char* argv[])
     FILE* newFile = fopen(newIndexFilename, "w");
 
     if (oldFile == NULL){
-        fprintf(stderr, "Cannot open first file\n.");
+        fprintf(stderr, "Cannot open first file.\n");
         return 1;
     } else if (newFile == NULL){
-        fprintf(stderr, "Cannot open second file\n.");
+        fprintf(stderr, "Cannot open second file.\n");
         return 1;
     }
 
