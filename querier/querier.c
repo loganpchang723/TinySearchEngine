@@ -6,16 +6,29 @@
 #include "index.h"
 #include "pagedir.h"
 #include "word.h"
+#include "bag.h"
 #include "counters.h"
 #include "hashtable.h"
 #include "file.h"
 #include "ctype.h"
+
+/******** local data types *******/
+struct twocts {
+	counters_t *result;
+	counters_t *another;
+};
 
 /**************function prototypes*************/
 int fileno(FILE *stream);
 static void prompt(void); 
 // static char** parse_query(char* query, const int max_words);
 bool validate_query(char** array, const int query_len);
+void counters_intersect(counters_t* ct1, counters_t* ct2); 
+
+
+
+void copy_counters(void *arg, const int key, const int count);
+void intersect_helper(void *arg, const int key, const int count);
 /**************function prototypes*************/
 
 int main(const int argc, char* argv[])
@@ -95,8 +108,43 @@ int main(const int argc, char* argv[])
                 printf(" %s", words[i]); 
             }
             printf("\n");
+
             /* TESTPOINT 1: CHECK IF QUERY PARSING WORKS */
-            /* TODO: FILL IN SOME MORE LOGIC FROM HERE */
+            
+            // bag to keep track of all 'andseqeunces' in the query
+            bag_t* and_sequences = bag_new();
+
+            // counters to keep track of the 'and' intersection of everything seen so far
+            counters_t* and_sofar = counters_new();
+            counters_iterate(index_find(index, words[0]), and_sofar, copy_counters);
+
+            // determine all 'andsequences'
+            for (int i = 1; i < query_len; i++){
+                // break the current and sequence if an 'or' is seen and start a new 'andsequence'
+                if (strcmp(words[i], "or") == 0){
+                    bag_insert(and_sequences, and_sofar);
+                    and_sofar = counters_new();
+                    counters_iterate(index_find(index, words[i+1]), and_sofar, copy_counters);
+                } else {
+                    // we are in the middle of an 'andsequence' 
+                    if (strcomp(words[i], "and") != 0){
+                        // calculate the intersection of the current word and the current 'andsequence'
+                        counters_t* curr = index_find(index, words[i]);
+                        counters_intersect(and_sofar, curr);
+                    }
+                }
+            }
+            bag_insert(and_sequences, and_sofar);
+
+            // calculate the union of all the 'andsequences'
+            counters_t* total_union = counters_new();
+            counters_t* curr;
+            while ( (curr = bag_extract(and_sequences) != NULL)){
+                counters_union(total_union, curr);
+                counters_delete(curr);
+            }
+
+            /* TESTPOINT 2: CHECK IF THE AND SEQUENCES WERE CALCULATED PROPERLY */
 
         }
         
@@ -199,4 +247,68 @@ validate_query(char** words, const int query_len)
         }
     }
     return true;
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+counters_intersect(counters_t* ct1, counters_t* ct2)
+{
+	if (ct1 != NULL && ct2 != NULL){
+        struct twocts args = {ct1, ct2}; 
+	    counters_iterate(ct1, &args, intersect_helper);
+    }
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+counters_union(counters_t* ct1, counters_t* ct2)
+{
+	if (ct1 != NULL && ct2 != NULL){
+        struct twocts args = {ct1, ct2}; 
+	    counters_iterate(ct1, &args, union_helper);
+    }
+}
+
+
+
+
+
+
+
+
+
+/*
+ * TODO: INSERT DOC
+ */
+void
+copy_counters(void *arg, const int key, const int count)
+{
+    if (arg != NULL){
+        counters_t* dest = (counters_t*) arg;
+        counters_set(dest, key, count);
+    }
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+intersect_helper(void *arg, const int key, const int count)
+{
+	struct twocts *two = arg; 
+	counters_set(two->result, key, min(count, counters_get(two->another, key)));
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+union_helper(void *arg, const int key, const int count)
+{
+	struct twocts *two = arg; 
+	counters_set(two->result, key, (count + counters_get(two->another, key)));
 }

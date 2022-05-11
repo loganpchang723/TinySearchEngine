@@ -24,7 +24,7 @@ querier: $(OBJS) $(LLIBS)
 fuzzquery: $(OBJS1) $(LLIBS)
 	$(CC) $(CFLAGS) $(OBJS1) $(LLIBS) -o fuzzquery
 
-querier.o: ../libcs50/counters.h ../libcs50/hashtable.h ../libcs50/file.h  ../common/pagedir.h ../common/word.h ../common/index.h 
+querier.o: ../libcs50/counters.h ../libcs50/hashtable.h ../libcs50/bag.h ../libcs50/file.h  ../common/pagedir.h ../common/word.h ../common/index.h 
 fuzzquery.o: ../libcs50/memory.h ../libcs50/file.h
 
 .PHONY: test clean
