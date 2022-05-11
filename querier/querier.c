@@ -16,20 +16,6 @@ int fileno(FILE *stream);
 static void prompt(void); 
 // static char** parse_query(char* query, const int max_words);
 bool validate_query(char** array, const int query_len);
-// void simple_print(void* arg, const int key, const int count);
-// void calculateScore(index_t* it, counters_t* scoreKeeper, char** str, int len);
-// void help_accumulateScore(void* arg, const int key, const int count);
-// static void itemcount(void *arg, const int key,  const int count);
-// static char*** parse_andSequence(char** str, int* count, int len);
-// static void andSequenceAccumulate(counters_t* masterScore, char** andSequence, index_t* it);
-// static void counters_merge(counters_t* master, counters_t* local);
-// static void merge_help(void* arg, const int key, const int count);
-// static counters_t* counters_cleanup(counters_t* ctrs, index_t* it, char** str);
-// static void simple_set(void* arg, const int key, const int count);
-// static void cleanup_help(void* arg, const int key, const int count);
-// static void existence_check(void* arg, const int key, const int count);
-// static void simple_insert(void* arg, const int key, const int count);
-// static void rankBoard_sort(ranking_t** rankBoard, int slot);
 /**************function prototypes*************/
 
 int main(const int argc, char* argv[])
