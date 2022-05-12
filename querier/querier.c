@@ -18,17 +18,29 @@ struct twocts {
 	counters_t *another;
 };
 
+typedef struct ranking {
+    int docID;
+    int score;
+} ranking_t;
+
 /**************function prototypes*************/
 int fileno(FILE *stream);
 static void prompt(void); 
 // static char** parse_query(char* query, const int max_words);
 bool validate_query(char** array, const int query_len);
-void counters_intersect(counters_t* ct1, counters_t* ct2); 
-
-
+void counters_intersect(counters_t* ct1, counters_t* ct2);
+void counters_union(counters_t* ct1, counters_t* ct2);
+ranking_t* ranking_new(int key, int count); 
+static void rankboard_sort(ranking_t** rankBoard, int numDocs);
 
 void copy_counters(void *arg, const int key, const int count);
 void intersect_helper(void *arg, const int key, const int count);
+void union_helper(void *arg, const int key, const int count);
+void count_docs(void *arg, const int key, const int count);
+void counters_insert(void *arg, const int key, const int count);
+
+static int min(const int x, const int y);
+void itemdelete(void* item);
 /**************function prototypes*************/
 
 int main(const int argc, char* argv[])
@@ -91,6 +103,7 @@ int main(const int argc, char* argv[])
                 word = normalize_word(word);
                 query_len++;  
             }
+            printf("query len: %d\n", query_len);
             // if the query was not parsed properly, move on to next query
             if (words == NULL){
                 prompt();
@@ -102,7 +115,6 @@ int main(const int argc, char* argv[])
                 continue;
             }
             // print the query
-            // int query_len;
             printf("Query:");
             for (int i = 0; i < query_len; i++){
                 printf(" %s", words[i]); 
@@ -125,29 +137,96 @@ int main(const int argc, char* argv[])
                     bag_insert(and_sequences, and_sofar);
                     and_sofar = counters_new();
                     counters_iterate(index_find(index, words[i+1]), and_sofar, copy_counters);
+                    i++;
                 } else {
                     // we are in the middle of an 'andsequence' 
-                    if (strcomp(words[i], "and") != 0){
+                    if (strcmp(words[i], "and") != 0){
                         // calculate the intersection of the current word and the current 'andsequence'
                         counters_t* curr = index_find(index, words[i]);
                         counters_intersect(and_sofar, curr);
                     }
                 }
             }
+                printf("Printing and_sofar (use for single 'andsequence'): ");
+                counters_print(and_sofar, stdout);
+                printf("\n");
             bag_insert(and_sequences, and_sofar);
 
             // calculate the union of all the 'andsequences'
             counters_t* total_union = counters_new();
-            counters_t* curr;
-            while ( (curr = bag_extract(and_sequences) != NULL)){
-                counters_union(total_union, curr);
-                counters_delete(curr);
+            counters_t* curr_andseq;
+            while ( (curr_andseq = bag_extract(and_sequences)) != NULL){
+                counters_union(total_union, curr_andseq);
+                counters_delete(curr_andseq);
             }
+                printf("Printing total union: ");
+                counters_print(total_union, stdout);
+                printf("\n");
 
             /* TESTPOINT 2: CHECK IF THE AND SEQUENCES WERE CALCULATED PROPERLY */
 
+            // get the number of unique docs in the 'andsequence'
+            int numDocs = 0;
+            counters_iterate(total_union, &numDocs, count_docs);
+
+            // begin to rank the documents based on their score
+            ranking_t** rankboard = calloc(sizeof(ranking_t*), numDocs);
+            for(int p = 0; p < numDocs; p++){
+                rankboard[p] = NULL;
+            }
+            // insert each ranking object for each doc into rankboard
+            counters_iterate(total_union, rankboard, &counters_insert);
+            // sort each ranking object
+            rankboard_sort(rankboard, numDocs);
+            
+            // print number of documents matched
+            if (numDocs == 0){
+                printf("No documents match\n");
+            } else {
+                printf("Matches %d documents (ranked):\n", numDocs);
+            }
+
+            // print the documents in ranked order
+            FILE* page;
+            char* url;
+
+            //loop through array of ranking
+            for (int i = 0; i < numDocs; i++){
+
+                ranking_t* currentRank = rankboard[i];
+                char* filename = malloc(strlen(pageDir) + 8);
+                if (filename == NULL){
+                    exit(1);
+                }
+                sprintf(filename, "%s/%d", pageDir, currentRank->docID);
+                page = fopen(filename,"r");
+                //open file for url
+                if (page == NULL){
+                    fprintf(stderr, "File %d cannot be opened\n", currentRank->docID);
+                    exit(1);
+                }
+                url = freadlinep(page);
+
+                //prints the current document
+                printf("score\t%d doc\t%d: %s\n", currentRank->score, currentRank->docID, url);
+                free(filename);
+                free(url);
+                fclose(page);
+            }
+
+            // free dynamic memory
+            for (int i = 0; i < numDocs; i++){
+                free(rankboard[i]);
+            }
+            printf("--------------------------------------------------------------------------------\n");
+            free(rankboard);
+            bag_delete(and_sequences, itemdelete);
+            counters_delete(total_union);
+            free(query);
+            prompt();
+
         }
-        
+        index_delete(index);
 
     } else {
         fprintf(stderr, "ERROR: usage: ./querier pageDirectory indexFilename\n");
@@ -269,7 +348,46 @@ counters_union(counters_t* ct1, counters_t* ct2)
 {
 	if (ct1 != NULL && ct2 != NULL){
         struct twocts args = {ct1, ct2}; 
-	    counters_iterate(ct1, &args, union_helper);
+	    counters_iterate(ct2, &args, union_helper);
+    }
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+ranking_t* 
+ranking_new(const int key, const int count)
+{
+	ranking_t* ranking = malloc(sizeof(ranking_t));
+    if (ranking == NULL){
+        return NULL;
+    } else {
+        ranking->docID = key;
+        ranking->score = count;
+        return ranking;
+    }
+}
+
+/*
+ * TODO: INSERT DOC (insertion sort)
+ */
+static void
+rankboard_sort(ranking_t** rankBoard, int numDocs)
+{
+    int i;
+    int j;
+    ranking_t* currentRank;
+
+    for( i = 1; i < numDocs; i++){
+        // keeps copy of current rank
+        currentRank = rankBoard[i];
+        j = i - 1;
+        while (j >= 0 && (rankBoard[j]->score) < (currentRank->score)){
+            rankBoard[j+1] = rankBoard[j];
+            j = j - 1;
+        }
+        // move one spot over 
+        rankBoard[j+1] = currentRank;
     }
 }
 
@@ -310,5 +428,57 @@ void
 union_helper(void *arg, const int key, const int count)
 {
 	struct twocts *two = arg; 
-	counters_set(two->result, key, (count + counters_get(two->another, key)));
+	counters_set(two->result, key, (count + counters_get(two->result, key)));
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+count_docs(void *arg, const int key, const int count)
+{
+	int* numDocs = arg;
+    if (arg != NULL && key > 0 && count > 0){
+        (*numDocs)++;
+    }
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+counters_insert(void *arg, const int key, const int count)
+{
+	ranking_t** rankBoard = (ranking_t**) arg;
+    ranking_t* curr = ranking_new(key, count);
+    if (curr != NULL){
+        int i;
+        for(i = 0; rankBoard[i] != NULL; i++){}
+        rankBoard[i] = curr;
+    }
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+static int 
+min(const int x, const int y)
+{
+    if (x > y){
+        return y;
+    } else {
+        return x;
+    }
+}
+
+/*
+ * TODO: INSERT DOC
+ */
+void 
+itemdelete(void* item)
+{
+    counters_t* curr = (counters_t*) item;
+    if (curr != NULL){
+        counters_delete(curr);
+    }
 }
