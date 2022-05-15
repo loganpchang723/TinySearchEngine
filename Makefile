@@ -1,6 +1,6 @@
 # Makefile for CS50 Tiny Search Engine
 #
-# CS 50, Spring 2022
+# CS50, Spring 2022
 
 .PHONY: all valgrind clean
 
@@ -10,13 +10,13 @@ all:
 	make -C common
 	make -C crawler
 	make -C indexer
-#	make -C querier
+	make -C querier
 
 ############## valgrind all programs ##########
 valgrind: all
 	make -C crawler valgrind
-#	make -C indexer valgrind
-#	make -C querier valgrind
+	make -C indexer valgrind
+	make -C querier valgrind
 
 ############## clean  ##########
 clean:
@@ -25,4 +25,4 @@ clean:
 	make -C common clean
 	make -C crawler clean
 	make -C indexer clean
-#	make -C querier clean
+	make -C querier clean

@@ -1,3 +1,11 @@
+/* 
+ * querier.c - CS50 'querier' for TSE
+ *
+ *
+ * Logan Chang, 5/18/22
+ * CS50, Spring 2022
+ */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,6 +82,7 @@ int main(const int argc, char* argv[])
         // read queries until the user exits
         prompt();
         char* query;
+        char* normalQuery;
         // char** words;
 
         while ( (query = freadlinep(stdin)) != NULL){
@@ -82,8 +91,9 @@ int main(const int argc, char* argv[])
             char* words[max_words];
             int query_len = 0; 
             // separating words by whitespace and normalizing them
-            char* word = strtok(query, " \t");
-            word = normalize_word(word);
+            normalQuery = normalize_word(query);
+            free(query);
+            char* word = strtok(normalQuery, " \t");
             // read through each word in the query
             while(word != NULL){
                 // check for non-alphabetic characters in each word
@@ -91,7 +101,7 @@ int main(const int argc, char* argv[])
                     if (isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
                         // if non-alphabetic, print error and move on to next query
                         fprintf(stderr, "ERROR: bad character '%c' in query\n", word[j]);
-                        free(query);
+                        free(normalQuery);
                         prompt();
                         continue;
                     }
@@ -100,7 +110,6 @@ int main(const int argc, char* argv[])
                 words[query_len] = word;  
                 printf("parse_query: just parsed word = %s\n", words[query_len]);
                 word = strtok(NULL, " \t");
-                word = normalize_word(word);
                 query_len++;  
             }
             printf("query len: %d\n", query_len);
@@ -147,9 +156,6 @@ int main(const int argc, char* argv[])
                     }
                 }
             }
-                printf("Printing and_sofar (use for single 'andsequence'): ");
-                counters_print(and_sofar, stdout);
-                printf("\n");
             bag_insert(and_sequences, and_sofar);
 
             // calculate the union of all the 'andsequences'
@@ -187,42 +193,38 @@ int main(const int argc, char* argv[])
             }
 
             // print the documents in ranked order
-            FILE* page;
-            char* url;
-
-            //loop through array of ranking
             for (int i = 0; i < numDocs; i++){
 
                 ranking_t* currentRank = rankboard[i];
                 char* filename = malloc(strlen(pageDir) + 8);
                 if (filename == NULL){
-                    exit(1);
+                    break;
                 }
                 sprintf(filename, "%s/%d", pageDir, currentRank->docID);
-                page = fopen(filename,"r");
-                //open file for url
+                FILE* page = fopen(filename,"r");
+                // open file for url
                 if (page == NULL){
                     fprintf(stderr, "File %d cannot be opened\n", currentRank->docID);
-                    exit(1);
+                    break;
                 }
-                url = freadlinep(page);
+                char* url = freadlinep(page);
 
-                //prints the current document
+                // prints the current document score info
                 printf("score\t%d doc\t%d: %s\n", currentRank->score, currentRank->docID, url);
                 free(filename);
                 free(url);
                 fclose(page);
             }
+            printf("--------------------------------------------------------------------------------\n");
 
             // free dynamic memory
             for (int i = 0; i < numDocs; i++){
                 free(rankboard[i]);
             }
-            printf("--------------------------------------------------------------------------------\n");
             free(rankboard);
             bag_delete(and_sequences, itemdelete);
             counters_delete(total_union);
-            free(query);
+            free(normalQuery);
             prompt();
 
         }
@@ -449,12 +451,14 @@ count_docs(void *arg, const int key, const int count)
 void 
 counters_insert(void *arg, const int key, const int count)
 {
-	ranking_t** rankBoard = (ranking_t**) arg;
-    ranking_t* curr = ranking_new(key, count);
-    if (curr != NULL){
-        int i;
-        for(i = 0; rankBoard[i] != NULL; i++){}
-        rankBoard[i] = curr;
+    if (count > 0){
+        ranking_t** rankBoard = (ranking_t**) arg;
+        ranking_t* curr = ranking_new(key, count);
+        if (curr != NULL){
+            int i;
+            for(i = 0; rankBoard[i] != NULL; i++){}
+            rankBoard[i] = curr;
+        }
     }
 }
 
