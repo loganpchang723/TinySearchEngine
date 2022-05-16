@@ -90,6 +90,7 @@ int main(const int argc, char* argv[])
             int max_words = strlen(query) / 2;
             char* words[max_words];
             int query_len = 0; 
+            bool good_query = true;
             // separating words by whitespace and normalizing them
             normalQuery = normalize_word(query);
             free(query);
@@ -98,21 +99,31 @@ int main(const int argc, char* argv[])
             while(word != NULL){
                 // check for non-alphabetic characters in each word
                 for(int j = 0; j < strlen(word); j++){
-                    if (isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
+                    if (word[j] != '\'' && isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
                         // if non-alphabetic, print error and move on to next query
                         fprintf(stderr, "ERROR: bad character '%c' in query\n", word[j]);
-                        free(normalQuery);
-                        prompt();
-                        continue;
+                        good_query = false;
+                        break;
                     }
+                }
+                // break from loop if current query is bad
+                if (!good_query){
+                    break;
                 }
                 // store the word in the array of words
                 words[query_len] = word;  
-                printf("parse_query: just parsed word = %s\n", words[query_len]);
+                // printf("parse_query: just parsed word = %s\n", words[query_len]);
                 word = strtok(NULL, " \t");
                 query_len++;  
             }
-            printf("query len: %d\n", query_len);
+            // move on to next query if the current query is bad
+            if (!good_query){
+                free(normalQuery);
+                good_query = true;
+                prompt();
+                continue;
+            }
+            // printf("query len: %d\n", query_len);
             // if the query was not parsed properly, move on to next query
             if (words == NULL){
                 prompt();
@@ -246,36 +257,6 @@ static void prompt(){
     }
 }
 
-/*
- * TODO: INSERT DOC
- */
-// static char*[] 
-// parse_query(char* query, const int max_words)
-// {
-//     // initialize memory
-//     char* words[max_words];
-//     int i = 0; 
-//     // separating words by whitespace and normalizing them
-//     char* word = strtok(query, " ");
-//     word = normalize_word(word);
-//     // read through each word in the query
-//     while(word != NULL){
-//         // check for non-alphabetic characters in each word
-//         for(int j = 0; j < strlen(word); j++){
-//             if (isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
-//                 fprintf(stderr, "ERROR: bad character '%c' in query\n", word[j]);
-//                 return NULL;
-//             }
-//         }
-//         // store the word in the array of words
-//         words[i] = word;  
-//         printf("parse_query: just parsed word = %s\n", words[i]);
-//         word = strtok(NULL, " ");
-//         word = normalize_word(word);
-//         i++;  
-//     }
-//     return words;
-// }
 
 /*
  * TODO: INSERT DOC

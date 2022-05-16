@@ -29,7 +29,7 @@ fuzzquery.o: ../libcs50/memory.h ../libcs50/file.h
 
 .PHONY: test clean
 
-test: testing.sh
+test: querier fuzzquery
 	bash -v testing.sh >& testing.out
 
 # valgrind: indexer indextest
