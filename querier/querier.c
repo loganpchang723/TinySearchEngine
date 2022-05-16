@@ -99,7 +99,7 @@ int main(const int argc, char* argv[])
             while(word != NULL){
                 // check for non-alphabetic characters in each word
                 for(int j = 0; j < strlen(word); j++){
-                    if (word[j] != '\'' && isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
+                    if (isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
                         // if non-alphabetic, print error and move on to next query
                         fprintf(stderr, "ERROR: bad character '%c' in query\n", word[j]);
                         good_query = false;

@@ -32,9 +32,8 @@ fuzzquery.o: ../libcs50/memory.h ../libcs50/file.h
 test: querier fuzzquery
 	bash -v testing.sh >& testing.out
 
-# valgrind: indexer indextest
-# 	valgrind --leak-check=full --show-leak-kinds=all ./indexer ../data/letters-3 ../data/letters-3-index
-# 	valgrind --leak-check=full --show-leak-kinds=all ./indextest ../data/letters-3-index ../data/letters-3-index-testing
+valgrind: querier fuzzquery
+	./fuzzquery /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-1 10 214| valgrind --leak-check=full --show-leak-kinds=all  ./querier /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-depth-1/ /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-1
 
 clean:
 	rm -rf *.dSYM 
