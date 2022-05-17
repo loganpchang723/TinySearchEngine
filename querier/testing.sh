@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#####################################
+## Integration testing for querier ##
+#####################################
+
 # variables
 tse_dir=/thayerfs/courses/22spring/cosc050/cs50tse/tse-output
 
@@ -16,7 +20,7 @@ echo "for" | ./querier $tse_dir/letters-depth-10/ $tse_dir/letters-index-6
 echo "for" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index-10
 
 # testing with invalid quries
-# tesing with non alpha-numeric characters
+# tesing with non alphabetic characters
 echo "for, home" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index-6
 
 echo "for1 home" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index-6

@@ -1,4 +1,8 @@
-# TSE Crawler Design Spec
+# CS50 TSE
+# Logan Chang
+# Spring 2022
+
+## TSE Crawler Design Spec
 
 Recall the [Crawler Requirements Spec](REQUIREMENTS.md); the **crawler** crawls a website and retrieves webpages starting with a specified URL.
 It parses the initial webpage, extracts any embedded URLs and retrieves those pages, and crawls the pages found at those URLs, but limits itself to `maxDepth` hops from the seed URL and to URLs that are 'internal' to the designated CS50 server.

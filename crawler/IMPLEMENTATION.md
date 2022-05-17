@@ -1,4 +1,6 @@
 # CS50 TSE
+# Logan Chang
+# Spring 2022
 
 ## Crawler Implementation
 

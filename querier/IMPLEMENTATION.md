@@ -1,4 +1,6 @@
 # CS50 TSE
+# Logan Chang
+# Spring 2022
 
 ## Querier Implementation
 
@@ -64,15 +66,15 @@ Arguments: `words` (a pointer to a pointer of string [dynamic string array] repr
 
 For `void counters_intersect`:
 Arguments: two pointers to `counters` struct to be intersected
-1. Store the intersection in the second `counters` pointer by taking the minimum of each `counters` structs count for matching keys
+1. Store the intersection in the first `counters` pointer by taking the minimum of each `counters` structs count for matching keys
 
 For `void counters_union`:
 Arguments: two pointers to `counters` struct to be union
-1. Store the union in the second `counters` pointer by taking the sum of each `counters` structs count for corresponding keys
+1. Store the union in the first `counters` pointer by taking the sum of each `counters` structs count for corresponding keys
 
 For `static void rankboard_sort`:
 Arguments: `rankboard` (a pointer to an array of `ranking` structs) and `numDocs` (an int representing the length of `rankboard`)
-1. Sorts `rankboard` in place by non-decreasing score order via insertion sort
+1. Sorts `rankboard` in place by non-increasin score order via insertion sort
 
 ### Data Structures
 The querier uses a `ranking` data structure that stores a document's ID and its score for the given query. The querier also uses a local `twocts` struct which simply holds two `counters` struct pointers

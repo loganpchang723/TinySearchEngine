@@ -31,6 +31,8 @@ typedef struct ranking {
 } ranking_t;
 
 /**************function prototypes*************/
+
+/****************querier functions****************/
 int fileno(FILE *stream);
 static void prompt(void); 
 bool validate_query(char** array, const int query_len);
@@ -38,16 +40,22 @@ void counters_intersect(counters_t* ct1, counters_t* ct2);
 void counters_union(counters_t* ct1, counters_t* ct2);
 ranking_t* ranking_new(int key, int count); 
 static void rankboard_sort(ranking_t** rankBoard, int numDocs);
+/************************************************/
 
+/****************iterator functions****************/
 void copy_counters(void *arg, const int key, const int count);
 void intersect_helper(void *arg, const int key, const int count);
 void union_helper(void *arg, const int key, const int count);
 void count_docs(void *arg, const int key, const int count);
 void counters_insert(void *arg, const int key, const int count);
+/*************************************************/
 
+/****************helper functions****************/
 static int min(const int x, const int y);
 void itemdelete(void* item);
-/**************function prototypes*************/
+/************************************************/
+
+/*************************************************/
 
 int main(const int argc, char* argv[])
 {
@@ -110,7 +118,6 @@ int main(const int argc, char* argv[])
                 }
                 // store the word in the array of words
                 words[query_len] = word;  
-                // printf("parse_query: just parsed word = %s\n", words[query_len]);
                 word = strtok(NULL, " \t");
                 query_len++;  
             }
@@ -121,7 +128,6 @@ int main(const int argc, char* argv[])
                 prompt();
                 continue;
             }
-            // printf("query len: %d\n", query_len);
             // if the query was not parsed properly, move on to next query
             if (words == NULL){
                 prompt();
@@ -138,8 +144,6 @@ int main(const int argc, char* argv[])
                 printf(" %s", words[i]); 
             }
             printf("\n");
-
-            /* TESTPOINT 1: CHECK IF QUERY PARSING WORKS */
             
             // bag to keep track of all 'andseqeunces' in the query
             bag_t* and_sequences = bag_new();
@@ -174,11 +178,6 @@ int main(const int argc, char* argv[])
                 counters_union(total_union, curr_andseq);
                 counters_delete(curr_andseq);
             }
-                // printf("Printing total union: ");
-                // counters_print(total_union, stdout);
-                // printf("\n");
-
-            /* TESTPOINT 2: CHECK IF THE AND SEQUENCES WERE CALCULATED PROPERLY */
 
             // get the number of unique docs in the 'andsequence'
             int numDocs = 0;
@@ -246,8 +245,10 @@ int main(const int argc, char* argv[])
     return 0;
 }
 
+/******** prompt *************/
 /*
- * TODO: INSERT DOC
+ * We do: 
+ *  Print a user prompt if stdin is a terminal
  */
 static void prompt(){
   if (isatty(fileno(stdin))) {
@@ -256,8 +257,15 @@ static void prompt(){
 }
 
 
+/******** validate_query *************/
 /*
- * TODO: INSERT DOC
+ * Caller provides:
+ *  An pointer to a pointer of strings in the query (a dynamic array of the words in the query)
+ *  The number of words in the query
+ *
+ * We return: 
+ *  true if the query doesn't start or end with 'and' or 'or' and the query has no consecutive 'and's or 'or's
+ *  false otherwise
  */
 bool
 validate_query(char** words, const int query_len)
@@ -271,18 +279,16 @@ validate_query(char** words, const int query_len)
         fprintf(stderr, "ERROR: 'or' cannot be first\n");
         return false;
     }
-
     if (strcmp(words[query_len-1], "and") == 0){
         fprintf(stderr, "ERROR: 'and' cannot be last\n");
         return false;
     }
-
     if (strcmp(words[query_len-1], "or") == 0){
         fprintf(stderr, "ERROR: 'or' cannot be last\n");
         return false;
     }
 
-    //check if two and and ors are consecutive
+    //check for consecutive 'and' or 'or's
     for (int i = 1; i < query_len-1; i++){
         if (strcmp(words[i], "and") == 0){
             if (strcmp(words[i+1], "and") == 0){
@@ -309,8 +315,13 @@ validate_query(char** words, const int query_len)
     return true;
 }
 
+/******** counters_intersect *************/
 /*
- * TODO: INSERT DOC
+ * Caller provides:
+ *  Two pointers to counters structs, the first which will store the intersection
+ *
+ * We do: 
+ *  Store the intersection of the two counters keys and counts in the first counter argument
  */
 void 
 counters_intersect(counters_t* ct1, counters_t* ct2)
@@ -321,8 +332,13 @@ counters_intersect(counters_t* ct1, counters_t* ct2)
     }
 }
 
+/******** counters_union *************/
 /*
- * TODO: INSERT DOC
+ * Caller provides:
+ *  Two pointers to counters structs, the first which will store the union
+ *
+ * We do: 
+ *  Store the union of the two counters keys and counts in the first counter argument
  */
 void 
 counters_union(counters_t* ct1, counters_t* ct2)
@@ -333,8 +349,16 @@ counters_union(counters_t* ct1, counters_t* ct2)
     }
 }
 
-/*
- * TODO: INSERT DOC
+/**************** ranking_new ****************/
+/* 
+ * Caller provides:
+ *  An int key and int count, which reprsent the docID and score for the document, respectively
+ *
+ * We return:
+ *  pointer to the new ranking object, or NULL if error
+ * 
+ * Caller is responsible for:
+ *  later freeing the ranking struct's memory 
  */
 ranking_t* 
 ranking_new(const int key, const int count)
@@ -349,8 +373,15 @@ ranking_new(const int key, const int count)
     }
 }
 
-/*
- * TODO: INSERT DOC (insertion sort)
+/**************** ranking_new ****************/
+/* 
+ * Caller provides:
+ *  A pointer to pointers of ranking structs (a dynamic array of ranking structs)
+ *  An int of the number of ranking structs in the array, or the number of unique documents matching the query
+ *
+ * We do:
+ *   Sort the ranking structs in rankboard in non-increasing order via insertion sort
+ * 
  */
 static void
 rankboard_sort(ranking_t** rankBoard, int numDocs)
@@ -374,14 +405,16 @@ rankboard_sort(ranking_t** rankBoard, int numDocs)
 
 
 
+/****************iterator functions****************/
 
-
-
-
-
-
-/*
- * TODO: INSERT DOC
+/**************** copy_counters ****************/
+/* 
+ * Caller provides:
+ *  A pointer to the destination counters struct in arg
+ *
+ * We do:
+ *  Copy the contents of the counter being iterated to the destination counters struct
+ * 
  */
 void
 copy_counters(void *arg, const int key, const int count)
@@ -392,8 +425,14 @@ copy_counters(void *arg, const int key, const int count)
     }
 }
 
-/*
- * TODO: INSERT DOC
+/**************** intersect_helper ****************/
+/* 
+ * Caller provides:
+ *  A pointer to the twocts struct holding two counters struct pointers
+ *
+ * We do:
+ *  Calculate and store the intersection of the two counters in the first counter struct in arg
+ * 
  */
 void 
 intersect_helper(void *arg, const int key, const int count)
@@ -402,8 +441,14 @@ intersect_helper(void *arg, const int key, const int count)
 	counters_set(two->result, key, min(count, counters_get(two->another, key)));
 }
 
-/*
- * TODO: INSERT DOC
+/**************** union_helper ****************/
+/* 
+ * Caller provides:
+ *  A pointer to the twocts struct holding two counters struct pointers
+ *
+ * We do:
+ *  Calculate and store the union of the two counters in the first counter struct in arg
+ * 
  */
 void 
 union_helper(void *arg, const int key, const int count)
@@ -412,8 +457,14 @@ union_helper(void *arg, const int key, const int count)
 	counters_set(two->result, key, (count + counters_get(two->result, key)));
 }
 
-/*
- * TODO: INSERT DOC
+/**************** count_docs ****************/
+/* 
+ * Caller provides:
+ *  A pointer to the memory of the int to store the number of unique documents in the counters
+ *
+ * We do:
+ *  Calculate and store the number of unique documents in the counters struct in arg's memory
+ * 
  */
 void 
 count_docs(void *arg, const int key, const int count)
@@ -424,8 +475,15 @@ count_docs(void *arg, const int key, const int count)
     }
 }
 
-/*
- * TODO: INSERT DOC
+/**************** counters_insert ****************/
+/* 
+ * Caller provides:
+ *  A pointer to pointers of ranking structs that represents a dynamic array of ranking structs
+ *
+ * We do:
+ *  Create a pointer to a new ranking struct where key is the docID and count is the score of the current document
+ *  Insert the new ranking struct into the dynamic array of ranking structs
+ * 
  */
 void 
 counters_insert(void *arg, const int key, const int count)
@@ -441,8 +499,17 @@ counters_insert(void *arg, const int key, const int count)
     }
 }
 
-/*
- * TODO: INSERT DOC
+
+/****************helper functions****************/
+
+/**************** min ****************/
+/* 
+ * Caller provides:
+ *  Two ints to be compared
+ *
+ * We return:
+ *  The minimum value between the two ints, picking the first argument if the ints have the same value
+ * 
  */
 static int 
 min(const int x, const int y)
@@ -454,8 +521,14 @@ min(const int x, const int y)
     }
 }
 
-/*
- * TODO: INSERT DOC
+/**************** itemdelete ****************/
+/* 
+ * Caller provides:
+ *  A pointer a counters struct
+ *
+ * We do:
+ *  Delete the counters struct from memory
+ * 
  */
 void 
 itemdelete(void* item)
