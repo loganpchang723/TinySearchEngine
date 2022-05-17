@@ -17,7 +17,7 @@ indexer pageDirectory indexFileName
 For example:
 
 ``` bash
-$ ./crawler ../data/letters-3 ../data/letters-3-index
+$ ./indexer ../data/letters-3 ../data/letters-3-index
 ```
 
 ### Inputs and outputs

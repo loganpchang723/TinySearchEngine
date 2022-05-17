@@ -80,9 +80,11 @@ Arguments: `rankboard` (a pointer to an array of `ranking` structs) and `numDocs
 The querier uses a `ranking` data structure that stores a document's ID and its score for the given query. The querier also uses a local `twocts` struct which simply holds two `counters` struct pointers
 
 ### Other Modules
-The querier leverages other modules in the `common` and `libcs50` directories. In particular, the querier utilizes the `pageDir`, `index`, and `word` mdouels in the `common` directory along with the `counters`, and `bag` modules in `libcs50`. The documentation of each of these modules can be found in their respective header files.
+The querier leverages other modules in the `common` and `libcs50` directories. In particular, the querier utilizes the `pageDir`, `index`, `file`, and `word` modules in the `common` directory along with the `counters`, and `bag` modules in `libcs50`. The documentation of each of these modules can be found in their respective header files.
 
 ### Testing plan
+
+*Unit testing*. Given that there is only one main function and no auxiliary modules for querier, unit testing will primarily consist of testing the parsing of different commandline arguments.
 
 *Integration testing*.  Assemble the querier and test it as a whole.
 The *querier* will be fuzz tested by using *fuzzquery* and utilizing verified crawler directories and index files from `/thayerfs/courses/22spring/cosc050/cs50tse/tse-output`.
