@@ -54,7 +54,6 @@ ERROR: 'or' cannot be last
 # testing with proper query
 echo "search and home or eniac" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index-6
 Query: search and home or eniac
-Printing total union: {4=1, 3=1, 8=1, }
 Matches 3 documents (ranked):
 score	1 doc	4: http://cs50tse.cs.dartmouth.edu/tse/letters/E.html
 score	1 doc	3: http://cs50tse.cs.dartmouth.edu/tse/letters/B.html
@@ -64,7 +63,6 @@ score	1 doc	8: http://cs50tse.cs.dartmouth.edu/tse/letters/D.html
 # testing with different spacing
 echo "for       home search     first" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index-6
 Query: for home search first
-Printing total union: {1=0, 2=0, 3=1, 4=0, 5=0, 6=0, 7=0, 8=1, 9=0, }
 Matches 2 documents (ranked):
 score	1 doc	3: http://cs50tse.cs.dartmouth.edu/tse/letters/B.html
 score	1 doc	8: http://cs50tse.cs.dartmouth.edu/tse/letters/D.html
@@ -73,7 +71,6 @@ score	1 doc	8: http://cs50tse.cs.dartmouth.edu/tse/letters/D.html
 # testing with uppercase letters
 echo "fOR AND hoMe" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index-6
 Query: for and home
-Printing total union: {1=1, 2=1, 3=1, 4=1, 5=1, 6=1, 7=1, 8=1, 9=1, }
 Matches 9 documents (ranked):
 score	1 doc	1: http://cs50tse.cs.dartmouth.edu/tse/letters/index.html
 score	1 doc	2: http://cs50tse.cs.dartmouth.edu/tse/letters/A.html
@@ -93,33 +90,26 @@ ERROR: bad character ''' in query
 ERROR: bad character ''' in query
 ERROR: bad character ''' in query
 Query: depth computational and computational graph or fast
-Printing total union: {7=1, 8=0, }
 Matches 1 documents (ranked):
 score	1 doc	7: http://cs50tse.cs.dartmouth.edu/tse/letters/F.html
 --------------------------------------------------------------------------------
 Query: moustache page or coding nationality for home
-Printing total union: {6=1, }
 Matches 1 documents (ranked):
 score	1 doc	6: http://cs50tse.cs.dartmouth.edu/tse/letters/H.html
 --------------------------------------------------------------------------------
 Query: graph the and coding
-Printing total union: {5=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: the playground and home fourier graph
-Printing total union: {1=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: blackhead and depth playground
-Printing total union: {}
 No documents match
 --------------------------------------------------------------------------------
 Query: page and fourier or breadth and commutes playground
-Printing total union: {3=0, 1=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: algorithm tse and graph page
-Printing total union: {2=0, }
 No documents match
 --------------------------------------------------------------------------------
 
@@ -127,33 +117,26 @@ No documents match
 ./fuzzquery: generating 10 queries from 2326 words
 ERROR: bad character ''' in query
 Query: flotations ecafa and cependant
-Printing total union: {}
 No documents match
 --------------------------------------------------------------------------------
 Query: toil committee
-Printing total union: {6=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: fashionable and newest
-Printing total union: {9=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: felonies and drink
-Printing total union: {}
 No documents match
 --------------------------------------------------------------------------------
 Query: itself prices or existence and cea
-Printing total union: {12=0, 8=1, }
 Matches 1 documents (ranked):
 score	1 doc	8: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/rip-it-up-and-start-again_986/index.html
 --------------------------------------------------------------------------------
 Query: happen or drink and magnificent halftime
-Printing total union: {1=0, 2=0, 23=0, 24=0, 25=0, 26=0, 27=0, 28=0, 29=0, 30=0, 31=0, 32=0, 33=0, 34=0, 35=0, 36=0, 37=0, 38=0, 39=0, 40=0, 41=0, 42=0, 43=0, 44=0, 45=0, 46=0, 47=0, 48=0, 49=0, 50=0, 51=0, 52=0, 53=0, 54=0, 55=0, 56=0, 57=0, 58=0, 59=0, 60=0, 61=0, 62=0, 63=0, 64=0, 65=0, 66=0, 67=0, 68=0, 69=0, 70=0, 71=0, 72=0, 73=0, 18=1, }
 Matches 1 documents (ranked):
 score	1 doc	18: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/sapiens-a-brief-history-of-humankind_996/index.html
 --------------------------------------------------------------------------------
 Query: time
-Printing total union: {5=2, 13=3, 15=2, 16=1, 21=1, 59=1, 63=1, 64=1, 71=2, }
 Matches 9 documents (ranked):
 score	3 doc	13: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-black-maria_991/index.html
 score	2 doc	5: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html
@@ -166,12 +149,10 @@ score	1 doc	63: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/category/
 score	1 doc	64: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/category/books/fiction_10/index.html
 --------------------------------------------------------------------------------
 Query: does soothed or immensely ecosystem or suicide and timely
-Printing total union: {42=0, 7=0, 17=1, }
 Matches 1 documents (ranked):
 score	1 doc	17: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-requiem-red_995/index.html
 --------------------------------------------------------------------------------
 Query: special persecution or laws or enigmatic joints
-Printing total union: {14=0, 18=1, 22=0, }
 Matches 1 documents (ranked):
 score	1 doc	18: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/sapiens-a-brief-history-of-humankind_996/index.html
 --------------------------------------------------------------------------------
@@ -182,18 +163,16 @@ ERROR: index file cannot be read
 
 # valgrind test
 ./fuzzquery $tse_dir/toscrape-index-2 10 23 | valgrind --leak-check=full --show-leak-kinds=all ./querier $tse_dir/toscrape-depth-2/ $tse_dir/toscrape-index-2
-==36223== Memcheck, a memory error detector
-==36223== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==36223== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==36223== Command: ./querier /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-depth-2/ /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-2
-==36223== 
+==29202== Memcheck, a memory error detector
+==29202== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==29202== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==29202== Command: ./querier /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-depth-2/ /thayerfs/courses/22spring/cosc050/cs50tse/tse-output/toscrape-index-2
+==29202== 
 ./fuzzquery: generating 10 queries from 13563 words
 Query: vivre voted pouched
-Printing total union: {286=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: fifty or asylum
-Printing total union: {39=4, 175=1, 353=1, 53=1, 73=1, 149=2, 186=2, 187=2, 188=2, 189=2, 190=2, 191=2, 192=2, 193=7, 263=1, 411=3, 442=1, 450=1, 451=1, 452=1, 453=1, 454=1, 455=1, 456=5, 460=2, 471=2, 472=2, 473=2, 474=2, 475=2, 476=2, 477=11, }
 Matches 32 documents (ranked):
 score	11 doc	477: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/fifty-shades-darker-fifty-shades-2_892/index.html
 score	7 doc	193: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/fifty-shades-freed-fifty-shades-3_156/index.html
@@ -229,21 +208,17 @@ score	1 doc	454: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/some-wom
 score	1 doc	455: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/meternity_478/index.html
 --------------------------------------------------------------------------------
 Query: dugout or lay and count or staplers
-Printing total union: {116=0, 144=0, 253=0, 515=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: shamed and lineage and plots macrocosm and humans or bevy
-Printing total union: {324=1, 316=0, 375=0, }
 Matches 1 documents (ranked):
 score	1 doc	324: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-torch-is-passed-a-harding-family-story_945/index.html
 --------------------------------------------------------------------------------
 Query: aboriginal
-Printing total union: {5=1, }
 Matches 1 documents (ranked):
 score	1 doc	5: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/you-cant-bury-them-all-poems_961/index.html
 --------------------------------------------------------------------------------
 Query: symbolise or course
-Printing total union: {10=1, 102=2, 132=1, 143=1, 164=1, 184=1, 228=1, 252=3, 273=1, 275=1, 352=2, 379=2, 397=2, 415=1, 436=3, 438=2, 443=1, 536=1, 544=1, 549=1, }
 Matches 20 documents (ranked):
 score	3 doc	252: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/immunity-how-elie-metchnikoff-changed-the-course-of-modern-medicine_900/index.html
 score	3 doc	436: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-vacationers_863/index.html
@@ -267,21 +242,17 @@ score	1 doc	544: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/lilac-gi
 score	1 doc	549: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/mrs-houdini_821/index.html
 --------------------------------------------------------------------------------
 Query: stagnated unlimited or recast or aversion
-Printing total union: {209=1, 150=1, 50=0, }
 Matches 2 documents (ranked):
 score	1 doc	209: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/thinking-fast-and-slow_289/index.html
 score	1 doc	150: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-mathews-men-seven-brothers-and-the-war-against-hitlers-u-boats_408/index.html
 --------------------------------------------------------------------------------
 Query: softeners
-Printing total union: {}
 No documents match
 --------------------------------------------------------------------------------
 Query: earring willoughby or constrained and weather ambition todayand
-Printing total union: {380=0, 539=0, }
 No documents match
 --------------------------------------------------------------------------------
 Query: ready or invading
-Printing total union: {252=1, 56=2, 76=1, 130=2, 180=1, 278=2, 327=2, 331=1, 332=7, 333=2, 334=1, 335=1, 336=1, 337=1, 338=3, 412=2, 459=1, 462=2, 466=2, 468=2, 566=1, }
 Matches 21 documents (ranked):
 score	7 doc	332: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/having-the-barbarians-baby-ice-planet-barbarians-75_23/index.html
 score	3 doc	338: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/ready-player-one_209/index.html
@@ -305,12 +276,12 @@ score	1 doc	337: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/life-the
 score	1 doc	459: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/i-had-a-nice-time-and-other-lies-how-to-find-love-sht-like-that_814/index.html
 score	1 doc	566: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/a-time-of-torment-charlie-parker-14_657/index.html
 --------------------------------------------------------------------------------
-==36223== 
-==36223== HEAP SUMMARY:
-==36223==     in use at exit: 0 bytes in 0 blocks
-==36223==   total heap usage: 498,166 allocs, 498,166 frees, 365,964,766 bytes allocated
-==36223== 
-==36223== All heap blocks were freed -- no leaks are possible
-==36223== 
-==36223== For counts of detected and suppressed errors, rerun with: -v
-==36223== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==29202== 
+==29202== HEAP SUMMARY:
+==29202==     in use at exit: 0 bytes in 0 blocks
+==29202==   total heap usage: 498,166 allocs, 498,166 frees, 365,964,766 bytes allocated
+==29202== 
+==29202== All heap blocks were freed -- no leaks are possible
+==29202== 
+==29202== For counts of detected and suppressed errors, rerun with: -v
+==29202== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

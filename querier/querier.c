@@ -16,7 +16,6 @@
 #include "word.h"
 #include "bag.h"
 #include "counters.h"
-#include "hashtable.h"
 #include "file.h"
 #include "ctype.h"
 
@@ -34,7 +33,6 @@ typedef struct ranking {
 /**************function prototypes*************/
 int fileno(FILE *stream);
 static void prompt(void); 
-// static char** parse_query(char* query, const int max_words);
 bool validate_query(char** array, const int query_len);
 void counters_intersect(counters_t* ct1, counters_t* ct2);
 void counters_union(counters_t* ct1, counters_t* ct2);
@@ -176,9 +174,9 @@ int main(const int argc, char* argv[])
                 counters_union(total_union, curr_andseq);
                 counters_delete(curr_andseq);
             }
-                printf("Printing total union: ");
-                counters_print(total_union, stdout);
-                printf("\n");
+                // printf("Printing total union: ");
+                // counters_print(total_union, stdout);
+                // printf("\n");
 
             /* TESTPOINT 2: CHECK IF THE AND SEQUENCES WERE CALCULATED PROPERLY */
 
