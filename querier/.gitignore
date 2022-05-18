@@ -4,6 +4,6 @@
 
 # Do NOT push object files to git.
 # The following are specific to this directory:
-indexer
-indextest
+querier
+fuzzquery
 *.o
