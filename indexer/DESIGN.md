@@ -1,6 +1,5 @@
 # CS50 TSE
-# Logan Chang
-# Spring 2022
+# Logan Chang, Spring 2022
 
 ## TSE Indexer Design Spec
 
