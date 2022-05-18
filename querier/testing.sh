@@ -55,7 +55,7 @@ echo "fOR AND hoMe" | ./querier $tse_dir/letters-depth-6/ $tse_dir/letters-index
 
 ./fuzzquery $tse_dir/toscrape-index-1 10 100 | ./querier $tse_dir/toscrape-depth-1/ $tse_dir/toscrape-index-1
 
-./fuzzquery $tse_dir/toscrape-index-2 10 64 | ./querier $tse_dir/toscrape-depth-2/ $tse_dir/toscapre-index-2
+./fuzzquery $tse_dir/toscrape-index-2 10 64 | ./querier $tse_dir/toscrape-depth-2/ $tse_dir/toscrape-index-2
 
 # valgrind test
 ./fuzzquery $tse_dir/toscrape-index-2 10 23 | valgrind --leak-check=full --show-leak-kinds=all ./querier $tse_dir/toscrape-depth-2/ $tse_dir/toscrape-index-2

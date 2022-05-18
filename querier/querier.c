@@ -39,11 +39,10 @@ bool validate_query(char** array, const int query_len);
 void counters_intersect(counters_t* ct1, counters_t* ct2);
 void counters_union(counters_t* ct1, counters_t* ct2);
 ranking_t* ranking_new(int key, int count); 
-static void rankboard_sort(ranking_t** rankBoard, int numDocs);
+static void rankarray_sort(ranking_t** rankarray, int numDocs);
 /************************************************/
 
 /****************iterator functions****************/
-void copy_counters(void *arg, const int key, const int count);
 void intersect_helper(void *arg, const int key, const int count);
 void union_helper(void *arg, const int key, const int count);
 void count_docs(void *arg, const int key, const int count);
@@ -107,7 +106,7 @@ int main(const int argc, char* argv[])
                 for(int j = 0; j < strlen(word); j++){
                     if (isalpha(word[j]) == 0 && isspace(word[j]) == 0) {
                         // if non-alphabetic, print error and move on to next query
-                        fprintf(stderr, "ERROR: bad character '%c' in query\n", word[j]);
+                        printf("ERROR: bad character '%c' in query\n", word[j]);
                         good_query = false;
                         break;
                     }
@@ -150,7 +149,7 @@ int main(const int argc, char* argv[])
 
             // counters to keep track of the 'and' intersection of everything seen so far
             counters_t* and_sofar = counters_new();
-            counters_iterate(index_find(index, words[0]), and_sofar, copy_counters);
+            counters_union(and_sofar, index_find(index, words[0]));
 
             // determine all 'andsequences'
             for (int i = 1; i < query_len; i++){
@@ -158,7 +157,7 @@ int main(const int argc, char* argv[])
                 if (strcmp(words[i], "or") == 0){
                     bag_insert(and_sequences, and_sofar);
                     and_sofar = counters_new();
-                    counters_iterate(index_find(index, words[i+1]), and_sofar, copy_counters);
+                    counters_union(and_sofar, index_find(index, words[i+1]));
                     i++;
                 } else {
                     // we are in the middle of an 'andsequence' 
@@ -184,14 +183,14 @@ int main(const int argc, char* argv[])
             counters_iterate(total_union, &numDocs, count_docs);
 
             // begin to rank the documents based on their score
-            ranking_t** rankboard = calloc(sizeof(ranking_t*), numDocs);
+            ranking_t** rankarray = calloc(sizeof(ranking_t*), numDocs);
             for(int p = 0; p < numDocs; p++){
-                rankboard[p] = NULL;
+                rankarray[p] = NULL;
             }
-            // insert each ranking object for each doc into rankboard
-            counters_iterate(total_union, rankboard, &counters_insert);
+            // insert each ranking object for each doc into rankarray
+            counters_iterate(total_union, rankarray, &counters_insert);
             // sort each ranking object
-            rankboard_sort(rankboard, numDocs);
+            rankarray_sort(rankarray, numDocs);
             
             // print number of documents matched
             if (numDocs == 0){
@@ -203,7 +202,7 @@ int main(const int argc, char* argv[])
             // print the documents in ranked order
             for (int i = 0; i < numDocs; i++){
 
-                ranking_t* currentRank = rankboard[i];
+                ranking_t* currentRank = rankarray[i];
                 char* filename = malloc(strlen(pageDir) + 8);
                 if (filename == NULL){
                     break;
@@ -223,13 +222,13 @@ int main(const int argc, char* argv[])
                 free(url);
                 fclose(page);
             }
-            printf("--------------------------------------------------------------------------------\n");
+            printf("-----------------------------------------------\n");
 
             // free dynamic memory
             for (int i = 0; i < numDocs; i++){
-                free(rankboard[i]);
+                free(rankarray[i]);
             }
-            free(rankboard);
+            free(rankarray);
             bag_delete(and_sequences, itemdelete);
             counters_delete(total_union);
             free(normalQuery);
@@ -325,11 +324,9 @@ validate_query(char** words, const int query_len)
  */
 void 
 counters_intersect(counters_t* ct1, counters_t* ct2)
-{
-	if (ct1 != NULL && ct2 != NULL){
-        struct twocts args = {ct1, ct2}; 
-	    counters_iterate(ct1, &args, intersect_helper);
-    }
+{	
+    struct twocts args = {ct1, ct2}; 
+    counters_iterate(ct1, &args, intersect_helper);   
 }
 
 /******** counters_union *************/
@@ -343,10 +340,9 @@ counters_intersect(counters_t* ct1, counters_t* ct2)
 void 
 counters_union(counters_t* ct1, counters_t* ct2)
 {
-	if (ct1 != NULL && ct2 != NULL){
-        struct twocts args = {ct1, ct2}; 
-	    counters_iterate(ct2, &args, union_helper);
-    }
+    struct twocts args = {ct1, ct2}; 
+	counters_iterate(ct2, &args, union_helper);
+
 }
 
 /**************** ranking_new ****************/
@@ -380,11 +376,11 @@ ranking_new(const int key, const int count)
  *  An int of the number of ranking structs in the array, or the number of unique documents matching the query
  *
  * We do:
- *   Sort the ranking structs in rankboard in non-increasing order via insertion sort
+ *   Sort the ranking structs in rankarray in non-increasing order via insertion sort
  * 
  */
 static void
-rankboard_sort(ranking_t** rankBoard, int numDocs)
+rankarray_sort(ranking_t** rankarray, int numDocs)
 {
     int i;
     int j;
@@ -392,38 +388,20 @@ rankboard_sort(ranking_t** rankBoard, int numDocs)
 
     for( i = 1; i < numDocs; i++){
         // keeps copy of current rank
-        currentRank = rankBoard[i];
+        currentRank = rankarray[i];
         j = i - 1;
-        while (j >= 0 && (rankBoard[j]->score) < (currentRank->score)){
-            rankBoard[j+1] = rankBoard[j];
+        while (j >= 0 && (rankarray[j]->score) < (currentRank->score)){
+            rankarray[j+1] = rankarray[j];
             j = j - 1;
         }
         // move one spot over 
-        rankBoard[j+1] = currentRank;
+        rankarray[j+1] = currentRank;
     }
 }
 
 
 
 /****************iterator functions****************/
-
-/**************** copy_counters ****************/
-/* 
- * Caller provides:
- *  A pointer to the destination counters struct in arg
- *
- * We do:
- *  Copy the contents of the counter being iterated to the destination counters struct
- * 
- */
-void
-copy_counters(void *arg, const int key, const int count)
-{
-    if (arg != NULL){
-        counters_t* dest = (counters_t*) arg;
-        counters_set(dest, key, count);
-    }
-}
 
 /**************** intersect_helper ****************/
 /* 
@@ -489,12 +467,12 @@ void
 counters_insert(void *arg, const int key, const int count)
 {
     if (count > 0){
-        ranking_t** rankBoard = (ranking_t**) arg;
+        ranking_t** rankarray = (ranking_t**) arg;
         ranking_t* curr = ranking_new(key, count);
         if (curr != NULL){
             int i;
-            for(i = 0; rankBoard[i] != NULL; i++){}
-            rankBoard[i] = curr;
+            for(i = 0; rankarray[i] != NULL; i++){}
+            rankarray[i] = curr;
         }
     }
 }
